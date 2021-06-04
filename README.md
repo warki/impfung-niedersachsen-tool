@@ -8,6 +8,7 @@
 ## Installation
 ### Bookmarklet
 #### Desktop Rechner
+[Installations-Seite öffnen](https://warki.github.io/impfung-niedersachsen-tool/).
 Den Link in die Browser Favoritenleiste ziehen. Anschließend das Impfportal öffnen und den Link aus der Favoritenleiste aufrufen.
 
 ### Graesemonkey
