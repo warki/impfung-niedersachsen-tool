@@ -49,7 +49,7 @@ Daher stehen dem einfachen Benutzer auch nur wenige Möglichkeiten zur Verfügun
 | autofill_form.additional      | Weitere Anschriftdaten                                    |                                                                  |
 | autofill_form.email           | E-Mail Adresse                                            |                                                                  |
 | autofill_form.phone           | Telefonnummer (nötig fürs CAPTCHA)                        |                                                                  |
-| autofill_form.infoBy          | Wie soll die Bestätigung verschickt werden? (email|post)  |                                                                  |
+| autofill_form.infoBy          | Wie soll die Bestätigung verschickt werden? (email/post)  |                                                                  |
 | autofill_form.sms             | SMS-Erinnerung                                            |                                                                  |
 
 Die Konfiguration muss vor dem Start des Bookmarklets in der ``window.bookmarkletconfig``-Variable durchgeführt werden:
