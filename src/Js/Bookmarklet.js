@@ -10,10 +10,11 @@
 
   /**
    * Configuration
+   * Merge window.bookmarkletconfig into this default configuration
    *
-   * @type {{searchIntervalSecondsMax: number, searchIntervalSecondsMin: number, siren: string, autofill_form: {birthday: string, prio_medical: boolean, privacy: boolean, prio_work: boolean}, autofill: boolean}}
+   * @type {{searchIntervalSecondsMax: number, searchIntervalSecondsMin: number, siren: string, autofill_form: {birthday: string, zip: string, lastName: string, prio_medical: boolean, additional: string, privacy: boolean, prio_work: boolean, infoBy: string, firstName: string, housenumber: string, phone: string, street: string, sms: boolean, salutation: string, email: string}, autofill: boolean}}
    */
-  var config = ( window.hasOwnProperty('bookmarkletconfig') ) ? window.bookmarkletconfig : {
+  const DefaultConfig = {
     'siren': 'https://upload.wikimedia.org/wikipedia/commons/4/49/Sirene.ogg',
     'searchIntervalSecondsMin': 1,
     'searchIntervalSecondsMax': 30,
@@ -23,8 +24,44 @@
       'birthday': '01.01.1970',   // birthday of single user
       'prio_work': false,         // does a working priority exist?
       'prio_medical': false,      // does a medical priority exist?
-    }
+      'salutation': 'Divers',     // possible values for salutation: Herr/Frau/Divers
+      'zip': '',
+      'firstName': '',            //
+      'lastName': '',             //
+      'street': '',               //
+      'housenumber': '',          //
+      'additional': '',           // additional street address
+      'email': '',                // e-mail
+      'phone': '',                // phone number
+      'infoBy': 'email',          // email or post are possible values
+      'sms': false,               // send sms reminder
+    },
   };
+
+  /**
+   * User defined configuration
+   *
+   */
+  const WindowConfig = (window.hasOwnProperty('bookmarkletconfig')) ? window.bookmarkletconfig : {};
+
+  /**
+   * Configuration
+   * Merge window.bookmarkletconfig into default configuration
+   *
+   * @type {{searchIntervalSecondsMax: number, searchIntervalSecondsMin: number, siren: string, autofill_form: {birthday: string, zip: string, lastName: string, prio_medical: boolean, additional: string, privacy: boolean, prio_work: boolean, infoBy: string, firstName: string, housenumber: string, phone: string, street: string, sms: boolean, salutation: string, email: string}, autofill: boolean}}
+   */
+  const config = {
+    ...DefaultConfig,
+    ...WindowConfig
+  };
+  if ( WindowConfig.hasOwnProperty('autofill_form') ) {
+    config.autofill_form = {
+      ...DefaultConfig.autofill_form,
+      ...WindowConfig.autofill_form
+    };
+  }
+
+  console.log(DefaultConfig, WindowConfig, config);
 
   /**
    * Temporary holding the interval value
@@ -246,13 +283,11 @@
     if ( config.autofill === true ) {
 
       // autofill the form with data
-      div.appendChild( button('ausfüllen', 'autofillButton',() => {
+      div.appendChild( button('Formular ausfüllen', 'autofillButton',() => {
         fill();
-        console.log(this);
       }));
 
     }
-
 
     // start startSearching process
     div.appendChild( button('automatisch suchen','toggleButton', () => {
@@ -289,6 +324,7 @@
 
       }) );
 
+
     return div;
   };
 
@@ -319,9 +355,7 @@
       nextPage();
 
       if (
-        config.autofill_form.hasOwnProperty('birthday') === false
-        || config.autofill_form.birthday === null
-        || config.autofill_form.birthday.length === 0
+        config.autofill_form.birthday.length === 0
       ) {
         return;
       }
@@ -350,8 +384,8 @@
 
       // Prio 3: work
       if (
-        config.autofill_form.hasOwnProperty('prio_work')
-        && config.autofill_form.prio_work === true ) {
+        config.autofill_form.prio_work === true
+      ) {
 
         // mark radio
         elementDispatcher(
@@ -376,8 +410,8 @@
 
       // Prio 2:
       if (
-        config.autofill_form.hasOwnProperty('prio_medical')
-        && config.autofill_form.prio_medical === true ) {
+        config.autofill_form.prio_medical === true
+      ) {
 
         // Medizinisch berechtigt
         elementDispatcher(
@@ -410,18 +444,160 @@
       // weiter
       nextPage();
 
-      // Postleitzahl
-      elementDispatcher(
-        document.getElementById("mat-input-0"),
-        el => {
-          el.value = 49086;
-          el.dispatchEvent(inputEvent);
-        },
-        "Postleitzahl"
-      );
+     // Zip entry
+     if ( config.autofill_form.zip.length > 0 ) {
 
-      // start the startSearching process
-      startSearching();
+       // Postleitzahl
+       elementDispatcher(
+         document.getElementById("mat-input-0"),
+         el => {
+           el.value = config.autofill_form.zip;
+           el.dispatchEvent(inputEvent);
+         },
+         "Postleitzahl"
+       );
+
+       // start the startSearching process
+       startSearching();
+
+       fillPersonal().then(r => console.log(r));
+
+     }
+
+    } catch (e) {
+      alert("Ein Fehler ist aufgetreten: " + e.message);
+    }
+
+  };
+
+  /**
+   * fill the personal form with data
+   */
+  const fillPersonal = async () => {
+
+    try {
+
+      // fill phone number
+      if ( config.autofill_form.phone.length > 0 ) {
+        elementDispatcher(
+          document.getElementById('mat-input-1'),
+          el => {
+            el.value = config.autofill_form.phone;
+            el.dispatchEvent(inputEvent);
+          },
+          'Telefonnummer'
+        );
+      }
+
+      // fill salutation
+      if ( config.autofill_form.salutation.length > 0 ) {
+        // Salutation click
+        elementDispatcher(
+          document.getElementById('mat-select-2'),
+          el => el.dispatchEvent(clickEvent),
+          'Anrede Button'
+        );
+
+        // wait until the dropdown is open
+        await sleep(500);
+
+        // Salutation Value
+        elementDispatcher(
+          findElementByText(config.autofill_form.salutation, 'span.mat-option-text'),
+          el => el.dispatchEvent(clickEvent),
+          'Anrede ' + config.autofill_form.salutation
+        );
+
+        // wait until the dropdown is open
+        await sleep(500);
+
+      }
+
+      // Firstname
+      if ( config.autofill_form.firstName.length > 0 ) {
+        elementDispatcher(
+          document.getElementById("mat-input-8"),
+          el => {
+            el.value = config.autofill_form.firstName;
+            el.dispatchEvent(inputEvent);
+          },
+          "Vorname"
+        );
+      }
+
+      // Nachname
+      if ( config.autofill_form.lastName.length > 0 ) {
+        elementDispatcher(
+          document.getElementById("mat-input-9"),
+          el => {
+            el.value = config.autofill_form.lastName;
+            el.dispatchEvent(inputEvent);
+          },
+          "Nachname"
+        );
+      }
+
+      // Straße
+      if ( config.autofill_form.street.length > 0 ) {
+        elementDispatcher(
+          document.getElementById("mat-input-21"),
+          el => {
+            el.value = config.autofill_form.street;
+            el.dispatchEvent(inputEvent);
+          },
+          "Straße"
+        );
+      }
+
+      // Hausnummer
+      if ( config.autofill_form.housenumber.length > 0 ) {
+        elementDispatcher(
+          document.getElementById("mat-input-11"),
+          el => {
+            el.value = config.autofill_form.housenumber;
+            el.dispatchEvent(inputEvent);
+          },
+          "Hausnummer"
+        );
+      }
+
+      // Adresszusatz
+      if ( config.autofill_form.additional.length > 0 ) {
+        elementDispatcher(
+          document.getElementById("mat-input-12"),
+          el => {
+            el.value = config.autofill_form.additional;
+            el.dispatchEvent(inputEvent);
+          },
+          "Adresszusatz"
+        );
+      }
+
+      // E-mail confirmation
+      if ( config.autofill_form.infoBy === "email" ) {
+        elementDispatcher(
+          document.getElementById("mat-radio-15"),
+          el => el.dispatchEvent(clickEvent),
+          "E-Mail Bestätigung"
+        );
+      }
+      // postal confirmation
+      else if ( config.autofill_form.infoBy === "post" ) {
+        elementDispatcher(
+          document.getElementById("mat-radio-16"),
+          el => el.dispatchEvent(clickEvent),
+          "Briefbestätigung"
+        );
+      }
+
+      // SMS reminder
+      if ( config.autofill_form.sms ) {
+        elementDispatcher(
+          document.getElementById("mat-checkbox-3"),
+          el => el.checked = "checked",
+          "SMS-Erinnerung"
+        );
+      }
 
     } catch (e) {
       alert("Ein Fehler ist aufgetreten: " + e.message);
