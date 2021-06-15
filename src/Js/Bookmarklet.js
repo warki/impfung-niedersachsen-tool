@@ -17,7 +17,7 @@
   const DefaultConfig = {
     'siren': 'https://upload.wikimedia.org/wikipedia/commons/4/49/Sirene.ogg',
     'searchIntervalSecondsMin': 1,
-    'searchIntervalSecondsMax': 30,
+    'searchIntervalSecondsMax': 1,
     'autofill': false,
     'autofill_form': {
       'privacy': true,            // acknowledge privacy settings
@@ -61,7 +61,26 @@
     };
   }
 
-  console.log(DefaultConfig, WindowConfig, config);
+  /**
+   * Map Label Content to input
+   *
+   * @type {{zip: string, infoByEmail: string, lastName: string, infoByPost: string, additional: string, houseNumber: string, emailRepeat: string, firstName: string, phone: string, street: string, sms: string, salutation: string, email: string}}
+   */
+  const Mapping = {
+    phone: 'Telefon',
+    zip: '',
+    salutation: '',
+    firstName: '',
+    lastName: '',
+    street: '',
+    houseNumber: '',
+    additional: '',
+    email: '',
+    emailRepeat: '',
+    infoByEmail: '',
+    infoByPost: '',
+    sms: '',
+  };
 
   /**
    * Temporary holding the interval value
@@ -125,6 +144,16 @@
   ;
 
   /**
+   *
+   * @param {string} label
+   * @return {HTMLInputElement}
+   */
+  const findInputByLabel = (label) =>
+    findElementByText(label, "span")
+      .closest(".mat-form-field-infix").querySelector('input')
+  ;
+
+  /**
    * Find a link with the given text
    *
    * @param {string} text
@@ -150,6 +179,20 @@
       .find(element =>  element.offsetWidth > 0 && element.offsetHeight > 0 )
 
   /**
+   * is the given element currently visible?
+   *
+   * @param element
+   * @return {boolean}
+   */
+  const isHtmlElementVisible = element => typeof element !== 'undefined' && element !== null && element.offsetWidth > 0 && element.offsetHeight > 0;
+
+  /**
+   *
+   * @return {HTMLElement|null}
+   */
+  const findMonthSwitchButton = () => document.querySelector('.calendar .mat-focus-indicator:not(.mat-button-disabled)');
+
+  /**
    *
    * @type {HTMLAudioElement}
    */
@@ -159,36 +202,96 @@
    * Play the siren sound (must be granted by the user)
    * @return {Promise<void>}
    */
-  const playSiren = () => siren.play();
+  const playSiren = () => {
+    siren.play();
+    document.getElementById('sirenToggleButton').innerText = "Sirene pausieren";
+  }
 
   /**
    * Stop playing the siren
    */
-  const muteSiren = () => siren.pause();
+  const muteSiren = () => {
+    siren.pause();
+    document.getElementById('sirenToggleButton').innerText = "Sirene testen";
+  }
 
   /**
    * Submit the startSearching for new dates form
    *
    * @return {Promise<void>}
    */
-  const check = async () => {
-    findButtonByText("Suchen").dispatchEvent(clickEvent);
-    await sleep(500);
-    stopIfFound();
+  const checkPageZip = async () => {
+
+    if ( stopIfFoundOnPageZip() === false ) {
+      elementDispatcher(
+        findButtonByText("Suchen"),
+        async button => {
+          button.dispatchEvent(clickEvent);
+          await sleep(500);
+          stopIfFoundOnPageZip();
+        },
+        "Impfstoff Suchen Button nicht gefunden"
+      );
+    }
+
+  };
+  /**
+   * Submit the startSearching for new dates form
+   *
+   * @return {Promise<void>}
+   */
+  const checkPageDates = async () => {
+
+    if ( stopIfFoundOnDates() === false ) {
+      elementDispatcher(
+        findMonthSwitchButton(),
+        async button => {
+          button.click();
+          await sleep(500);
+          stopIfFoundOnDates();
+        },
+        "Monatswechsel Button nicht gefunden"
+      );
+    }
+
   };
 
   /**
    * Stop the event
    */
-  const stopIfFound = () => {
+  const stopIfFoundOnPageZip = () => {
+
     if  (!document.getElementsByClassName("centrum")[0].classList.contains("unavailable"))  {
-      // stop looking for new events
-      stop();
-      // Play some music
-      playSiren();
-      // send an alert message to the user
-      alert("Gefunden!!");
+      startFoundProcedure();
+      return true;
     }
+
+    return false;
+  }
+
+  /**
+   * Stop the event
+   */
+  const stopIfFoundOnDates = () => {
+
+    if  (document.querySelectorAll('.dayfree').length > 0)  {
+      startFoundProcedure();
+      return true;
+    }
+
+    return false;
+  }
+
+  /**
+   * Initialize the found procedure (play the siren, stop searching, alert user)
+   */
+  const startFoundProcedure = () => {
+    // stop looking for new events
+    stop();
+    // Play some music
+    playSiren();
+    // send an alert message to the user
+    alert("Gefunden!");
   }
 
   /**
@@ -314,12 +417,10 @@
         // Sirene gestoppt?
         if ( siren.paused === true ) {
           playSiren();
-          event.target.innerText = "Sirene pausieren";
         }
         // stop
         else {
           muteSiren();
-          event.target.innerText = "Sirene testen";
         }
 
       }) );
@@ -341,7 +442,7 @@
         return;
       }
 
-      // check first checkbox: privacy agreement
+      // checkPageZip first checkbox: privacy agreement
       elementDispatcher(
         document.getElementById("mat-checkbox-1-input"),
         el => el.dispatchEvent(clickEvent),
@@ -543,7 +644,7 @@
           document.getElementById("mat-input-21"),
           el => {
             el.value = config.autofill_form.street;
-            el.dispatchEvent(inputEvent);
+            el.dispatchEvent(submitEvent);
           },
           "Straße"
         );
@@ -573,6 +674,28 @@
         );
       }
 
+      if ( config.autofill_form.email ) {
+
+        elementDispatcher(
+          document.getElementById('mat-input-15'),
+          el => {
+            el.value = config.autofill_form.email;
+            el.dispatchEvent(inputEvent);
+          },
+          "E-Mail-Adresse"
+        );
+
+        elementDispatcher(
+          document.getElementById('mat-input-19'),
+          el => {
+            el.value = config.autofill_form.email;
+            el.dispatchEvent(inputEvent);
+          },
+          "E-Mail-Adresse Bestätigung"
+        )
+
+      }
+
       // E-mail confirmation
       if ( config.autofill_form.infoBy === "email" ) {
         elementDispatcher(
@@ -593,7 +716,7 @@
       // SMS reminder
       if ( config.autofill_form.sms ) {
         elementDispatcher(
-          document.getElementById("mat-checkbox-3"),
+          document.getElementById("mat-checkbox-2"),
           el => el.checked = "checked",
           "SMS-Erinnerung"
         );
@@ -610,6 +733,18 @@
    */
   const startSearching = () => {
 
+    // current page
+    if ( isHtmlElementVisible(findButtonByText("Suchen")) ) {
+      searchOnPageZip();
+    }
+    else if ( isHtmlElementVisible( findMonthSwitchButton() ) ) {
+      searchOnPageDates();
+    }
+    else {
+      alert("Falsche Seite! Bitte auf die Postleitzahl oder Terminauswahl Seite gehen");
+      return;
+    }
+
     // activate stop button
     elementDispatcher(
       document.getElementById('toggleButton'),
@@ -619,21 +754,35 @@
 
     running = true;
 
-    search();
   };
 
   /**
-   * Search
+   * Search on page zip
    * @return {Promise<void>}
    */
-  const search = async () => {
-    await check();
+  const searchOnPageZip = async () => {
+    await checkPageZip();
 
     if (running === true) {
       await sleep(
         getRandomInt( config.searchIntervalSecondsMin, config.searchIntervalSecondsMax ) * 1000
       );
-      await search();
+      await searchOnPageZip();
+    }
+  }
+
+  /**
+   * Search on Page dates
+   * @return {Promise<void>}
+   */
+  const searchOnPageDates = async () => {
+    await checkPageDates();
+
+    if (running === true) {
+      await sleep(
+        getRandomInt( config.searchIntervalSecondsMin, config.searchIntervalSecondsMax ) * 1000
+      );
+      await searchOnPageDates();
     }
   }
 

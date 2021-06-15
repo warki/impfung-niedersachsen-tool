@@ -7,20 +7,44 @@ So kann man die Suche in einem Browser-Tab im Hintergrund offen lassen und muss 
 ### Was ist ein Bookmarklet?
 [Bookmarklets](https://de.wikipedia.org/wiki/Bookmarklet) sind JavaScript Programme, die auf einer Webseite ausgeführt werden können.
 
+## Anleitung
+1. Installation durchführen (siehe Installation)
+2. [Impfportal Niedersachsen](https://www.impfportal-niedersachsen.de/portal/#/appointment/public) aufrufen
+3. Das Bookmarklet starten (siehe Installation)
+4. Das Formular auf dem Impfportal manuell ausfüllen (falls im Bookmarklet konfiguriert, dann kann das Ausfüllen auch automatisch erfolgen)
+5. Seite mit der Eingabe der Postleitzahl aufrufen, Postleitzahl eintragen und nun die "automatische Suche starten", indem der Button "automatische Suche starten" angeklickt wird
+6. Sobald nun ein freier Impfstoff gefunden wurde, ertönt eine Sirene
+7. Nun den Impfstoff auswählen
+8. legitimieren über SMS/Telefon
+9. Persönliche Daten eingeben
+10. Termin aus dem Kalender auswählen
+    Sollten in diesem Kalender keine freien Termine angezeigt werden (ein Datum mit freien Terminen ist grün markiert), kann auch hier die automatische Suche gestartet werden. Diese wechselt zwischen den Monaten hin und her und aktualisiert so die freien Termine. 
+    Sobald dann ein Termin gefunden wurde, ertönt die gleiche Sirene
+
+
 ## Installation
 ### Bookmarklet
 #### Desktop Rechner
 [Installations-Seite öffnen](https://warki.github.io/impfung-niedersachsen-tool/).
 Den Link in die Browser Favoritenleiste ziehen. Anschließend das Impfportal öffnen und den Link aus der Favoritenleiste aufrufen.
 
-### Graesemonkey
+#### Browser Konsole auf Desktop Rechnern
+Den Quellcode aus der [Bookmarklet.js-Datei](src/Js/Bookmarklet.js) in die Browser Konsole (meistens F12) kopieren. Hier ist auch eine Anpassung der Parameter möglich.
+
+### Greasemonkey
 [Greasemonkey](https://www.greasespot.net/)
-Ein neues Greasemonkey Benutzerscript erstellen und den Inhalt auf (/src/Js/Bookmarklet.js) reinkopieren.
+Ein neues Greasemonkey Benutzerscript erstellen und den Inhalt aus [Bookmarklet.js-Datei](src/Js/Bookmarklet.js) reinkopieren.
 
 ## Features
-### Automatische Suche nach neuen Terminen
+### Automatische Suche nach freien Impfstoffen
 Das Formular für die Suche muss geöffnet sein und anschließend kann die automatische Suche gestartet werden, indem der Button ![Button Automatisch Suchen](/doc/img/searchButton.jpg) angeklickt wird.
 Sobald ein freier Termin gefunden wurde, ertönt eine Sirene, sodass der Benutzer informiert wird und sich für diesen Impftermin anmelden kann.
+
+### Automatische Suche nach freien Terminen des gewählten Impfstoffs
+Leider reicht für die meisten die Zeit zwischen gefundenem Impfstoff, anschließende Validierung und Termin bestätigen nicht aus. Diese Personen sehen keine freien Termine im Kalender.
+Daher kann die Suche bei der Terminauswahl ebenfalls automatisch erfolgen. Hierzu den Button "automatische Suche starten" erneut anklicken, wenn die Termin Seite sichtbar ist.
+Sobald ein freier Termin gefunden wurde, ertönt eine Sirene, sodass der Benutzer informiert wird und sich für diesen Impftermin anmelden kann.
+
 
 ### Automatisches Formular ausfüllen
 Nach der Konfiguration lässt sich dieses Bookmarklet oder Greasemonkey Script auch zum automatischen Ausfüllen des Formulars nutzen.

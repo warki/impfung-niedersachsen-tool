@@ -1,3 +1,5 @@
 node_modules
 dist
 .idea
+src/Js/Generator.js
+docs/Form.html
