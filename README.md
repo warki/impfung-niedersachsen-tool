@@ -1,4 +1,7 @@
 # Impfportal Niedersachsen Bookmarklet und Greasemonkey Script
+[![GitHub release](https://img.shields.io/github/v/tag/warki/impfung-niedersachsen-tool?label=version)](https://github.com/warki/impfung-niedersachsen-tool/releases)
+[![GitHub license](https://img.shields.io/github/license/warki/impfung-niedersachsen-tool)](https://github.com/warki/impfung-niedersachsen-tool/blob/main/LICENSE)
+
 [Bookmarklets](https://de.wikipedia.org/wiki/Bookmarklet) für das [Impfportal Niedersachsen](https://www.impfportal-niedersachsen.de/portal/#/appointment/public), um nicht mehr selbst nach neuen Terminen suchen zu müssen. 
 Das Tool überprüft automatisch alle paar Sekunden, ob ein neuer Impftermin freigeworden ist und löst bei Erfolg ein Sirenen Geräusch aus. Anschließend kann der Termin vom Benutzer gebucht werden.
 So kann man die Suche in einem Browser-Tab im Hintergrund offen lassen und muss nur noch auf die Sirene warten.
@@ -104,7 +107,7 @@ window.bookmarkletconfig = {
 };
 ```
 
-## Optimierungen
+## Offene Optimierungen
 ### Konfigurationserstellung
 Die Konfiguration kann aktuell nur im Greasemonkey Script oder im Build Prozess angepasst werden. Für einen normalen Benutzer ist das nicht umsetzbar. Eine einfache HTML/JavaScript-Umgebung sollte ausreichend sein, um die Konfiguration vornehmen zu können.
 ### Mutation-Oberserver anstatt sleep
@@ -118,5 +121,8 @@ Eine einfache Benutzeranleitung für Desktop oder Mobile Browser erstellen.
 Um die dahinter liegende API nicht zu überbeanspruchen, bitte die Abrufintervalle in einem vernünftigen Maß halten. 
 Ebenso möchte ich explizit keinen Captcha-Solver oder ähnliches einbauen, damit die Buchung der Termine nicht vollautomatisiert stattfinden kann. 
 
-### Credits
+## Feedback
+Erstelle ein Issue oder schreibe mich auf [twitter](https://twitter.com/warki) an.
+
+## Credits
 - Sirene: [Datei](https://de.wikipedia.org/wiki/Datei:Sirene.ogg) von [GeoTrinity](https://commons.wikimedia.org/wiki/User:GeoTrinity) unter [Creative-Commons Namensnennung - Weitergabe unter gleichen Bedingungen 3.0 nicht portierbar](https://creativecommons.org/licenses/by-sa/3.0/deed.de) lizensiert.
