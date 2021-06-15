@@ -12,7 +12,7 @@ So kann man die Suche in einem Browser-Tab im Hintergrund offen lassen und muss 
 2. [Impfportal Niedersachsen](https://www.impfportal-niedersachsen.de/portal/#/appointment/public) aufrufen
 3. Das Bookmarklet starten (siehe Installation)
 4. Das Formular auf dem Impfportal manuell ausfüllen (falls im Bookmarklet konfiguriert, dann kann das Ausfüllen auch automatisch erfolgen)
-5. Seite mit der Eingabe der Postleitzahl aufrufen, Postleitzahl eintragen und nun die "automatische Suche starten", indem der Button "automatische Suche starten" angeklickt wird
+5. Seite mit der Eingabe der Postleitzahl aufrufen, Postleitzahl eintragen und nun die "automatische Suche starten", indem der Button ![Button Automatisch Suchen](docs/img/searchButton.png)  angeklickt wird
 6. Sobald nun ein freier Impfstoff gefunden wurde, ertönt eine Sirene
 7. Nun den Impfstoff auswählen
 8. legitimieren über SMS/Telefon
@@ -37,7 +37,7 @@ Ein neues Greasemonkey Benutzerscript erstellen und den Inhalt aus [Bookmarklet.
 
 ## Features
 ### Automatische Suche nach freien Impfstoffen
-Das Formular für die Suche muss geöffnet sein und anschließend kann die automatische Suche gestartet werden, indem der Button ![Button Automatisch Suchen](/doc/img/searchButton.jpg) angeklickt wird.
+Das Formular für die Suche muss geöffnet sein und anschließend kann die automatische Suche gestartet werden, indem der Button ![Button Automatisch Suchen](docs/img/searchButton.png) angeklickt wird.
 Sobald ein freier Termin gefunden wurde, ertönt eine Sirene, sodass der Benutzer informiert wird und sich für diesen Impftermin anmelden kann.
 
 ### Automatische Suche nach freien Terminen des gewählten Impfstoffs
