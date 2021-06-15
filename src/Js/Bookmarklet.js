@@ -17,7 +17,7 @@
   const DefaultConfig = {
     'siren': 'https://upload.wikimedia.org/wikipedia/commons/4/49/Sirene.ogg',
     'searchIntervalSecondsMin': 1,
-    'searchIntervalSecondsMax': 1,
+    'searchIntervalSecondsMax': 5,
     'autofill': false,
     'autofill_form': {
       'privacy': true,            // acknowledge privacy settings
