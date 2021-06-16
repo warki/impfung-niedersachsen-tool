@@ -85,7 +85,7 @@ Die Konfiguration muss vor dem Start des Bookmarklets in der ``window.bookmarkle
 window.bookmarkletconfig = {
     'siren': 'https://upload.wikimedia.org/wikipedia/commons/4/49/Sirene.ogg',
     'searchIntervalSecondsMin': 1,
-    'searchIntervalSecondsMax': 1,
+    'searchIntervalSecondsMax': 30,
     'autofill': true,
     'autofill_form': {
       'privacy': true,              // Datenschutz akzeptiert
@@ -117,12 +117,24 @@ Es sollte überprüft werden, ob eine Audiodatei automatisiert abgespielt werden
 ### Anleitungen
 Eine einfache Benutzeranleitung für Desktop oder Mobile Browser erstellen.
 
-### Missbrauch
+## Missbrauch
 Um die dahinter liegende API nicht zu überbeanspruchen, bitte die Abrufintervalle in einem vernünftigen Maß halten. 
-Ebenso möchte ich explizit keinen Captcha-Solver oder ähnliches einbauen, damit die Buchung der Termine nicht vollautomatisiert stattfinden kann. 
+Ebenso möchte ich explizit keinen Captcha-Solver, automatische Buchungen oder ähnliches einbauen, damit die Buchung der Termine nicht vollautomatisiert stattfinden kann. 
+
+## Motivation
+Ich habe erwartet, dass die Warteliste vom Impfzentrum abgearbeitet wird. Aber offenbar werden die kurzfristig freigewordenen Termine nicht an die Warteliste weitergereicht. 
+
+Die Buchung der kurzfristig freigewordenen Einzeltermine ist je nach Impfzentrum sehr mühselig. Man sitzt stundenlang vor dem Formular und aktualisiert sekündlich die freigewordenen Impfungen. Anschließend ist der Termin meistens ausgebucht, sodass man wieder von vorne anfängt.
+Nun kann diese Arbeit automatisiert im Hintergrund ablaufen und man muss nur bei einer Erfolgsmeldung dem Browser Tab Beachtung schenken.
+
+Außerdem möchte ich nicht, dass jemand sich über ebay oder die Kleinanzeigen Impftermine besorgen muss. Dieses Tool kann von jedem bedient werden.
 
 ## Feedback
 Erstelle ein Issue oder schreibe mich auf [twitter](https://twitter.com/warki) an.
+
+## Hilfreiche Links
+- [Statistik über die letzten Impftermine: impfsuche.de](https://www.impfsuche.de/protect/statistik)
+- [Python Impfbot für Impfbenachrichtigungen](https://github.com/sibalzer/impfbot)
 
 ## Credits
 - Sirene: [Datei](https://de.wikipedia.org/wiki/Datei:Sirene.ogg) von [GeoTrinity](https://commons.wikimedia.org/wiki/User:GeoTrinity) unter [Creative-Commons Namensnennung - Weitergabe unter gleichen Bedingungen 3.0 nicht portierbar](https://creativecommons.org/licenses/by-sa/3.0/deed.de) lizensiert.
